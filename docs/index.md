@@ -5,9 +5,9 @@ This training is aimed at introducing the basic insights into quality control, m
 
 To secure a place on the training, register [here](https://docs.google.com/forms/d/1x4La0OaNaTgOCK6cj2FXeNSSdEa5-HAy6LmtiWyTXAA/edit).
 
-Contact: Please email [nicholas.bbosa@mrcuganda.org](nicholas.bbosa@mrcuganda.org) for more information.
+**Contact:** Please email [nicholas.bbosa@mrcuganda.org](nicholas.bbosa@mrcuganda.org) for more information.
 
-## Training Schedule
+## **Training Schedule**
 
 ### **Day 1: Introduction to metagenomics**
 
