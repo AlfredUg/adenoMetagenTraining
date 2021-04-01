@@ -13,12 +13,12 @@ To secure a place on the training, register [here](https://docs.google.com/forms
 
 | Time  | Session|
 | ------------- | ------------- |
-|0900 - 0915 |    Welcome and participants Introduction|
-|0915 - 1045 |    NGS file formats and Quality control |
-|1045 - 1115 |    Coffee break|
-|1115 - 1215 |    Introduction to metagenomics sequencing|
-|1215 - 1245 |    Applications of metagenomics|
-|1245 - 1400 |    Lunch |
+|0900 - 0915 |    Welcome and participants introduction|
+|1000 - 1100 |    Introduction to metagenomics sequencing|
+|1100 - 1130 |    Coffee break|
+|1130 - 1230 |    Applications of metagenomics|
+|1230 - 1300 |    NGS file formats and Quality control |
+|1300 - 1400 |    Lunch |
 |1400 - 1500 |    Reference-based mapping |
 |1500 - 1600 |    DeNovo assembly |
 
