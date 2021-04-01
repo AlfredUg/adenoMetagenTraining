@@ -3,6 +3,12 @@
 
 This training is aimed at introducing the basic insights into quality control, metagenomic NGS data processing, mapping read metagenomics data onto reference genomes, de novo assembly of metagenomics data. As a use-case, we apply this to identifying adeno virus from metagenomics data. The first sessions comprise of lecture materials which introduce metagenomics and its application in biomedical research. These are followed with a series of practical sessions details of which are available at [https://alfredug.github.io/adenoMetagenTraining/notes.html](https://alfredug.github.io/adenoMetagenTraining/notes.html).
 
+To secure a place on the training, register [here](https://docs.google.com/forms/d/1x4La0OaNaTgOCK6cj2FXeNSSdEa5-HAy6LmtiWyTXAA/edit).
+
+Contact: Please email nicholas.bbosa@mrcuganda.org for more information.
+
+## Training Schedule
+
 ### **Day 1: Introduction to metagenomics**
 
 | Time  | Session|
