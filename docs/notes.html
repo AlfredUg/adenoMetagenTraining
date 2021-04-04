@@ -2793,8 +2793,7 @@ color:#8E44AD
    
 <!-- Don't indent these lines or it will mess pre blocks indentation --> 
 <div id="main">
-<p>Welcome to this session of the introduction to metagenomics analysis. This training is aimed at introducing the basic insights into quality control, mNGS data processing, mapping read mNGS data onto reference genomes, de novo assembly of mNGS data. As a use-case, we apply this to identifying adenoviruses from metagenomics data.</p>
-<p>Before continuing with the data analysis, we recommend that you go through the lecture materials which introduce metagenomics Next Generation Sequencing (mNGS). The course outline and links to other materials are available at <a href="https://alfredug.github.io/adenoMetagenTraining/" class="uri">https://alfredug.github.io/adenoMetagenTraining/</a>.</p>
+<p>Welcome to this session of the introduction to metagenomics analysis. This training is aimed at introducing the basic insights into quality control, data processing, mapping short read data onto reference genomes and de novo assembly of short reads to generate longer contigs. As a use-case, we demonstrate the procedure of identifying adenoviruses from short read metagenomics data. The course outline and links to other training materials are available at <a href="https://alfredug.github.io/adenoMetagenTraining/" class="uri">https://alfredug.github.io/adenoMetagenTraining/</a>.</p>
 <div id="tools" class="section level2">
 <h2><strong>Analysis tools</strong></h2>
 <p>For this training, we shall use the following tools.</p>
@@ -2870,7 +2869,7 @@ color:#8E44AD
 <li>Using wild cards in bash (<code>*</code>, <code>?</code>)</li>
 <li>For loops in bash</li>
 </ul>
-<p>For a more comprehensive coverage of linux commands, we recommend looking at the <strong>Linux commands handbook</strong> by Flavio Copes.</p>
+<p>For a more comprehensive coverage of linux commands, we recommend looking at the <strong>Linux commands handbook</strong> by Flavio Copes at <a href="https://flaviocopes.com/page/ebooks/" class="uri">https://flaviocopes.com/page/ebooks/</a>.</p>
 </div>
 <div id="data-sources-and-description" class="section level2">
 <h2><strong>Data sources and description</strong></h2>
@@ -2885,12 +2884,12 @@ color:#8E44AD
 <h3><strong>Quality trimming</strong></h3>
 <p>After inspecting the quality of the reads, we use <code>trim_galore</code> to trim reads by length and quality. Note that our input is the fastq reads as specified earlier.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>mkdir trimmed</span>
-<span id="cb2-2"><a href="#cb2-2"></a>trim_galore <span class="op">-</span>q <span class="dv">25</span> <span class="op">-</span>l <span class="dv">75</span> <span class="op">--</span>dont_gzip <span class="op">--</span>clip_R1 <span class="dv">16</span> <span class="op">--</span>clip_R2 <span class="dv">16</span> <span class="op">--</span>paired sample1_R1.fq sample1_R2.fq <span class="op">-</span>o trimmed</span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2"></a>trim_galore <span class="op">-</span>q <span class="dv">25</span> <span class="op">-</span>l <span class="dv">75</span> <span class="op">--</span>dont_gzip <span class="op">--</span>clip_R1 <span class="dv">16</span> <span class="op">--</span>clip_R2 <span class="dv">16</span> <span class="op">--</span>paired data<span class="op">/</span>sample1_R1.fq data<span class="op">/</span>sample1_R2.fq <span class="op">-</span>o trimmed</span></code></pre></div>
 </div>
 </div>
 <div id="reference-based-mapping" class="section level2">
 <h2><strong>Reference based mapping</strong></h2>
-<p>At this point, we have clean reads and we are ready to map the reads onto reference genomes of interest. We do this using <code>bowtie2</code>. To demonstrate this, we use six reference genomes including Human adenoviruses A, B1, B2, C, D, F. Prior to mapping using <code>bowtie2</code> we need to check that the reference genome is indexed.</p>
+<p>At this point, we have clean reads and we are ready to map the reads onto reference genomes of interest. We do this using <code>bowtie2</code>. To demonstrate this, we use six reference genomes including Human adenoviruses A, B1, B2, C, D, F. Prior to mapping using <code>bowtie2</code> we need to check that the reference genomes are indexed.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>mkdir mapping</span>
 <span id="cb3-2"><a href="#cb3-2"></a>bowtie2 <span class="op">-</span>x path<span class="op">/</span>to<span class="op">/</span>refs <span class="dv">-1</span> trimmed<span class="op">/</span>sample1_R1_val1.fq <span class="dv">-2</span> trimmed<span class="op">/</span>sample1_R2_val2.fq <span class="op">-</span>S mapping<span class="op">/</span>sample1.sam</span></code></pre></div>
 <div id="mapping-statistics" class="section level3">
@@ -2917,7 +2916,7 @@ color:#8E44AD
 <h3><strong>Remove host reads</strong></h3>
 <p>Prior to performing de novo assembly, we remove the host reads from the data. Here we use <code>bowtie2</code> to map reads to the human genome and retain the reads that do not map to the human genome for de novo assembly.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>mkdir clean_reads</span>
-<span id="cb7-2"><a href="#cb7-2"></a>bowtie2 <span class="op">-</span>x path<span class="op">/</span>to<span class="op">/</span>host<span class="op">/</span>db <span class="dv">-1</span> sample1_R1.fastq <span class="dv">-2</span> sample1_R2.fastq <span class="op">--</span>un<span class="op">-</span>conc<span class="op">-</span>gz clean_reads<span class="op">/</span>sample1_clean <span class="op">&gt;</span><span class="st"> </span>clean_reads<span class="op">/</span>sample1_host.sam</span></code></pre></div>
+<span id="cb7-2"><a href="#cb7-2"></a>bowtie2 <span class="op">-</span>x path<span class="op">/</span>to<span class="op">/</span>host<span class="op">/</span>db <span class="dv">-1</span> trimmed<span class="op">/</span>sample1_R1.fastq <span class="dv">-2</span> trimmed<span class="op">/</span>sample1_R2.fastq <span class="op">--</span>un<span class="op">-</span>conc<span class="op">-</span>gz clean_reads<span class="op">/</span>sample1_clean <span class="op">&gt;</span><span class="st"> </span>clean_reads<span class="op">/</span>sample1_host.sam</span></code></pre></div>
 </div>
 <div id="de-novo-assembly-using-spades" class="section level3">
 <h3><strong>De novo assembly using spades</strong></h3>
