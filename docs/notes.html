@@ -7,7 +7,7 @@
 
         <meta name="author" content="MRC/UVRI and LSTHM" />
     
-        <meta name="date" content="2021-03-27" />
+        <meta name="date" content="2021-04-04" />
     
     <title>Introduction to Metagenomics NGS Data analysis</title>
 
@@ -2768,32 +2768,23 @@ color:#8E44AD
       <li><a href="#quality-trimming"><strong>Quality trimming</strong></a></li>
       </ul></li>
       <li><a href="#reference-based-mapping"><strong>Reference based mapping</strong></a><ul>
-      <li><a href="#collecting-mapping-statistics"><strong>Collecting mapping statistics</strong></a></li>
+      <li><a href="#mapping-statistics"><strong>Mapping statistics</strong></a></li>
       </ul></li>
       <li><a href="#de-novo-assembly"><strong>De novo assembly</strong></a><ul>
       <li><a href="#remove-host-reads"><strong>Remove host reads</strong></a></li>
       <li><a href="#de-novo-assembly-using-spades"><strong>De novo assembly using spades</strong></a></li>
-      <li><a href="#align-reads-back-to-contigs"><strong>Align reads back to contigs</strong></a></li>
-      <li><a href="#evaluation-of-genome-assemblies"><strong>Evaluation of genome assemblies</strong></a></li>
+      <li><a href="#de-novo-assembly-using-megahit"><strong>De novo assembly using megahit</strong></a></li>
+      <li><a href="#merge-contigs-from-spades-and-megahit-assemblers"><strong>Merge contigs from spades and megahit assemblers</strong></a></li>
       <li><a href="#blast-de-novo-constructed-contigs-using-diamond"><strong>Blast de-novo constructed contigs using diamond</strong></a></li>
       </ul></li>
-      <li><a href="#batch-scripts-to-run-analyses-on-many-samples-at-ago"><strong>Batch scripts to run analyses on many samples at ago</strong></a><ul>
-      <li><a href="#quality-control-and-trimming-1"><strong>Quality control and trimming</strong></a></li>
-      <li><a href="#reference-based-mapping-1"><strong>Reference based mapping</strong></a></li>
-      <li><a href="#collecting-mapping-statistics-1"><strong>Collecting mapping statistics</strong></a></li>
-      <li><a href="#remove-host-reads-1"><strong>Remove host reads</strong></a></li>
-      <li><a href="#de-novo-assembly-using-spades-1"><strong>De novo assembly using spades</strong></a></li>
-      <li><a href="#align-reads-back-to-contigs-1"><strong>Align reads back to contigs</strong></a></li>
-      <li><a href="#evaluation-of-genome-assemblies-1"><strong>Evaluation of genome assemblies</strong></a></li>
-      <li><a href="#blast-de-novo-constructed-contigs-using-diamond-1"><strong>Blast de-novo constructed contigs using diamond</strong></a></li>
-      </ul></li>
+      <li><a href="#batch-scripting"><strong>Batch scripting</strong></a></li>
       <li><a href="#contact-us"><strong>Contact us</strong></a></li>
       <li><a href="#references"><strong>References</strong></a></li>
       </ul>
     </div>
     <div id="postamble" data-toggle="wy-nav-shift" class="status">
                   <p class="author"><span class="glyphicon glyphicon-user"></span> MRC/UVRI and LSTHM</p>
-                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-03-27</p>
+                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-04-04</p>
           </div>
    </div>
    
@@ -2802,8 +2793,8 @@ color:#8E44AD
    
 <!-- Don't indent these lines or it will mess pre blocks indentation --> 
 <div id="main">
-<p>Welcome to this session of the introduction to metagenomics analysis. This training is aimed at introducing the basic insights into quality control, mNGS data processing, mapping read mNGS data onto reference genomes, de novo assembly of mNGS data. As a use-case, we apply this to identifying adeno virus from metagenomics data.</p>
-<p>Before continuing with the data analysis, we recommend that you go through the lecture materials which introduce metagenomics Next Generation Sequencing (mNGS). Details of course outline and corresponding facilitators are available at <a href="https://github.com/AlfredUg/adenoMetagenTraining" class="uri">https://github.com/AlfredUg/adenoMetagenTraining</a>.</p>
+<p>Welcome to this session of the introduction to metagenomics analysis. This training is aimed at introducing the basic insights into quality control, mNGS data processing, mapping read mNGS data onto reference genomes, de novo assembly of mNGS data. As a use-case, we apply this to identifying adenoviruses from metagenomics data.</p>
+<p>Before continuing with the data analysis, we recommend that you go through the lecture materials which introduce metagenomics Next Generation Sequencing (mNGS). The course outline and links to other materials are available at <a href="https://alfredug.github.io/adenoMetagenTraining/" class="uri">https://alfredug.github.io/adenoMetagenTraining/</a>.</p>
 <div id="tools" class="section level2">
 <h2><strong>Analysis tools</strong></h2>
 <p>For this training, we shall use the following tools.</p>
@@ -2812,10 +2803,11 @@ color:#8E44AD
 <li><code>trim_galore</code> <span class="citation">(Krueger 2015)</span> for trimming off adapters and low quality reads.</li>
 <li><code>bowtie2</code> <span class="citation">(Langmead and Salzberg 2012)</span>, for mapping reads onto reference genomes.</li>
 <li><code>samtools</code> <span class="citation">(Li et al. 2009)</span> for manipulating and inspecting sequence alignment files.</li>
-<li><code>metaspades</code> <span class="citation">(Nurk et al. 2017)</span> for de novo assembly of the reads, <code>quast.py</code> for assessing the quality of de novo assembly.</li>
-<li><code>diamond</code> <span class="citation">(Buchfink, Xie, and Huson 2015)</span> for comparing contigs reconstructed from denovo assemby to the non-redundant NCBI database.</li>
+<li><code>metaspades</code> <span class="citation">(Nurk et al. 2017)</span> and <code>megahit</code> <span class="citation">(Li et al. 2016)</span> for de novo assembly of the reads.</li>
+<li><code>GARM</code> <span class="citation">(Soto-Jimenez, Estrada, and Sanchez-Flores 2014)</span> for merging contigs generated using different assemblers.</li>
+<li><code>diamond</code> <span class="citation">(Buchfink, Xie, and Huson 2015)</span> for comparing contigs reconstructed from denovo assemby to the NCBI non-redundant protein database.</li>
 </ul>
-<p>To ensure that we are using the same versions of the tools for consistence, the tools together with required databases have been installed onto a virtual machine which will be used for this training. However, you may go on and do a native installation of the tools if you like. Procedure of installing a pre-built virtual machine is detailed in the next section. You will need a minimum of 15 GB free storage to run the virtual machine on your computer.</p>
+<p>To ensure that we are using the same versions of the tools for consistence, the tools together with required databases have been installed onto a virtual machine which will be used for this training. However, you may go on and do a native installation of the tools if you like. Procedure of installing a pre-built virtual machine is detailed in the next section. You will need a minimum of 40 GB free storage to run the virtual machine on your computer.</p>
 </div>
 <div id="downloading-and-launching-the-virtual-machine" class="section level2">
 <h2><strong>Downloading and launching the virtual machine</strong></h2>
@@ -2882,12 +2874,13 @@ color:#8E44AD
 </div>
 <div id="data-sources-and-description" class="section level2">
 <h2><strong>Data sources and description</strong></h2>
+<p>Covered as part of the lecture sessions.</p>
 </div>
 <div id="quality-control-and-trimming" class="section level2">
 <h2><strong>Quality control and trimming</strong></h2>
 <p>Here we assess the quality of the raw reads using <code>Fastqc</code> program. This gives the basic statistics for each of the forward and backward reads.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>mkdir fastqc_results</span>
-<span id="cb1-2"><a href="#cb1-2"></a>fastqc sample1_R1.fq sample1_R2.fq <span class="op">--</span>outdir fastqc_results</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2"></a>fastqc data<span class="op">/</span>sample1_R1.fq data<span class="op">/</span>sample1_R2.fq <span class="op">--</span>outdir fastqc_results</span></code></pre></div>
 <div id="quality-trimming" class="section level3">
 <h3><strong>Quality trimming</strong></h3>
 <p>After inspecting the quality of the reads, we use <code>trim_galore</code> to trim reads by length and quality. Note that our input is the fastq reads as specified earlier.</p>
@@ -2897,112 +2890,71 @@ color:#8E44AD
 </div>
 <div id="reference-based-mapping" class="section level2">
 <h2><strong>Reference based mapping</strong></h2>
-<p>At this point, we have clean reads and we ready to map the reads onto the reference genome. We do this using <code>bowtie2</code>. Before proceeding, check that the reference genome is indexed. The output of this is the alignment file in <code>SAM</code> format.</p>
+<p>At this point, we have clean reads and we are ready to map the reads onto reference genomes of interest. We do this using <code>bowtie2</code>. To demonstrate this, we use six reference genomes including Human adenoviruses A, B1, B2, C, D, F. Prior to mapping using <code>bowtie2</code> we need to check that the reference genome is indexed.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>mkdir mapping</span>
-<span id="cb3-2"><a href="#cb3-2"></a>bowtie2 <span class="op">-</span>x refs<span class="op">/</span>adeno <span class="dv">-1</span> trimmed<span class="op">/</span>sample1_R1_val1.fq <span class="dv">-2</span> trimmed<span class="op">/</span>sample1_R2_val2.fq <span class="op">-</span>S mapping<span class="op">/</span>sample1.sam</span></code></pre></div>
-<div id="collecting-mapping-statistics" class="section level3">
-<h3><strong>Collecting mapping statistics</strong></h3>
-<p>Having obtained the alignment, we need to add a process for collecting the mapping statistics. Suppose we obtain the statistics using <code>samtools flagstat</code>.</p>
+<span id="cb3-2"><a href="#cb3-2"></a>bowtie2 <span class="op">-</span>x path<span class="op">/</span>to<span class="op">/</span>refs <span class="dv">-1</span> trimmed<span class="op">/</span>sample1_R1_val1.fq <span class="dv">-2</span> trimmed<span class="op">/</span>sample1_R2_val2.fq <span class="op">-</span>S mapping<span class="op">/</span>sample1.sam</span></code></pre></div>
+<div id="mapping-statistics" class="section level3">
+<h3><strong>Mapping statistics</strong></h3>
+<p>Having obtained the alignment, obtain the mapping statistics. In this case, we use <code>samtools idxstats</code> which requires a sorted <code>bam</code> file.</p>
 <ul>
 <li>First we, convert the alignment format from <code>sam</code> to <code>bam</code></li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>samtools <span class="op">-</span>h mapping<span class="op">/</span>sample1.sam mapping<span class="op">/</span>sample1.bam</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>samtools view <span class="op">-</span>b mapping<span class="op">/</span>sample1.sam <span class="op">&gt;</span><span class="st"> </span>mapping<span class="op">/</span>sample1.bam</span></code></pre></div>
 <ul>
-<li>Then use <code>SAM_STATS</code> with input in <code>bam</code> to generate mapping stats</li>
+<li>Sort the <code>bam</code> file</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>SAM_STATS mapping<span class="op">/</span>sample1.bam</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>samtools sort mapping<span class="op">/</span>sample1.bam <span class="op">&gt;</span><span class="st"> </span>mapping<span class="op">/</span>sample1_sorted.bam</span></code></pre></div>
+<ul>
+<li>Obtain mapping statistics using <code>samtools</code> and the sorted <code>bam</code> file</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>samtools idxstats mapping<span class="op">/</span>sample1_sorted.bam</span></code></pre></div>
 </div>
 </div>
 <div id="de-novo-assembly" class="section level2">
 <h2><strong>De novo assembly</strong></h2>
+<p>This section comprises of three main stages; removing host reads from the read data, assembling short reads into longer contiguous sequences using two different assemblers, merging contigs constructed by two assemblers and lastly blasting the merged contigs using <code>diamond</code>.</p>
 <div id="remove-host-reads" class="section level3">
 <h3><strong>Remove host reads</strong></h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>bowtie2 <span class="op">-</span>p <span class="dv">1</span> <span class="op">-</span>x <span class="op">$</span>hostDB <span class="dv">-1</span> sample1_R1.fastq <span class="dv">-2</span> sample1_R2.fastq <span class="op">--</span>un<span class="op">-</span>conc<span class="op">-</span>gz sample1_clean <span class="op">&gt;</span><span class="st"> </span>sample1.sam</span></code></pre></div>
+<p>Prior to performing de novo assembly, we remove the host reads from the data. Here we use <code>bowtie2</code> to map reads to the human genome and retain the reads that do not map to the human genome for de novo assembly.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>mkdir clean_reads</span>
+<span id="cb7-2"><a href="#cb7-2"></a>bowtie2 <span class="op">-</span>x path<span class="op">/</span>to<span class="op">/</span>host<span class="op">/</span>db <span class="dv">-1</span> sample1_R1.fastq <span class="dv">-2</span> sample1_R2.fastq <span class="op">--</span>un<span class="op">-</span>conc<span class="op">-</span>gz clean_reads<span class="op">/</span>sample1_clean <span class="op">&gt;</span><span class="st"> </span>clean_reads<span class="op">/</span>sample1_host.sam</span></code></pre></div>
 </div>
 <div id="de-novo-assembly-using-spades" class="section level3">
 <h3><strong>De novo assembly using spades</strong></h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>mkdir sample1_spades_output</span>
-<span id="cb7-2"><a href="#cb7-2"></a>spades.py <span class="dv">-1</span> trimmed<span class="op">/</span>sample1_R1_val1.fq <span class="dv">-2</span> trimmed<span class="op">/</span>sample1_R2_val2.fq  <span class="op">-</span>t <span class="op">$</span>threads <span class="op">--</span>only<span class="op">-</span>assembler <span class="op">-</span>o sample1_spades_output<span class="op">/</span>contigs.fasta</span></code></pre></div>
+<p>Assemble the short reads into longer contigs using <code>spades</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>mkdir spades_output</span>
+<span id="cb8-2"><a href="#cb8-2"></a>spades.py <span class="dv">-1</span> clean_reads<span class="op">/</span>sample1_R1.fq <span class="dv">-2</span> clean_reads<span class="op">/</span>sample1_R2.fq <span class="op">--</span>only<span class="op">-</span>assembler <span class="op">-</span>o spades_output<span class="op">/</span>contigs.fasta</span></code></pre></div>
 </div>
-<div id="align-reads-back-to-contigs" class="section level3">
-<h3><strong>Align reads back to contigs</strong></h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>bowtie2<span class="op">-</span>build sample1_spades_output<span class="op">/</span>contigs.fasta sample1</span>
-<span id="cb8-2"><a href="#cb8-2"></a>bowtie2 <span class="op">-</span>x sample1 <span class="dv">-1</span> trimmed<span class="op">/</span>sample1_R1_val1.fq <span class="dv">-2</span> trimmed<span class="op">/</span>sample1_R2_val2.fq <span class="op">-</span>S sample1.sam</span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>samtools view <span class="op">-</span>b sample1.sam <span class="op">&gt;</span><span class="st"> </span>sample1.bam</span>
-<span id="cb9-2"><a href="#cb9-2"></a>samtools sort <span class="op">-</span>o sample1_sorted.bam sample1.bam </span>
-<span id="cb9-3"><a href="#cb9-3"></a>samtools index sample1_sorted.bam</span>
-<span id="cb9-4"><a href="#cb9-4"></a>samtools idxstats sample1_sorted.bam</span></code></pre></div>
+<div id="de-novo-assembly-using-megahit" class="section level3">
+<h3><strong>De novo assembly using megahit</strong></h3>
+<p>Assemble the short reads into longer contigs using <code>megahit</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>mkdir megahit_output</span>
+<span id="cb9-2"><a href="#cb9-2"></a>megahit <span class="dv">-1</span> clean_reads<span class="op">/</span>sample1_R1.fq <span class="dv">-2</span> clean_reads<span class="op">/</span>sample1_R2.fq <span class="op">-</span>o megahit_output</span></code></pre></div>
 </div>
-<div id="evaluation-of-genome-assemblies" class="section level3">
-<h3><strong>Evaluation of genome assemblies</strong></h3>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>quast.py <span class="op">-</span>o sample1_quast_output sample1_spades_output<span class="op">/</span>contigs.fasta </span></code></pre></div>
+<div id="merge-contigs-from-spades-and-megahit-assemblers" class="section level3">
+<h3><strong>Merge contigs from spades and megahit assemblers</strong></h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>printf <span class="op">$</span>PWD<span class="st">&#39;/spades_output/contigs.fasta  spades</span><span class="ch">\n</span><span class="st">&#39;</span> <span class="op">$</span>PWD<span class="st">&#39;/megahit_output/final.contigs.fa  megahit</span><span class="ch">\n</span><span class="st">&#39;</span> <span class="op">&gt;</span><span class="st"> </span>garm_spades_megahit</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>GARM.pl <span class="op">-</span>g garm_spades_megahit <span class="op">-</span>o garm_contigs</span></code></pre></div>
 </div>
 <div id="blast-de-novo-constructed-contigs-using-diamond" class="section level3">
 <h3><strong>Blast de-novo constructed contigs using diamond</strong></h3>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>mkdir diamond_out</span>
-<span id="cb11-2"><a href="#cb11-2"></a>mkdir diamond_out<span class="op">/</span>sample1_temp_dir</span>
-<span id="cb11-3"><a href="#cb11-3"></a>diamond blastx <span class="op">-</span>d databases<span class="op">/</span>diamond<span class="op">/</span>nr <span class="op">-</span>q sample1_spades_output<span class="op">/</span>contigs.fasta <span class="op">-</span>a diamond_out<span class="op">/</span>contigs_diamondnr.fasta diamond_out<span class="op">/</span>sample1_temp_dir <span class="op">--</span>top <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>mkdir diamond_out</span>
+<span id="cb12-2"><a href="#cb12-2"></a>mkdir diamond_out<span class="op">/</span>sample1_temp_dir</span>
+<span id="cb12-3"><a href="#cb12-3"></a>diamond blastx <span class="op">-</span>d databases<span class="op">/</span>diamond<span class="op">/</span>nr <span class="op">-</span>q garm_contigs<span class="op">/</span>final_merged_contigs.fasta <span class="op">-</span>a diamond_out<span class="op">/</span>contigs_diamondnr.fasta diamond_out<span class="op">/</span>sample1_temp_dir <span class="op">--</span>top <span class="dv">1</span></span></code></pre></div>
 </div>
 </div>
-<div id="batch-scripts-to-run-analyses-on-many-samples-at-ago" class="section level2">
-<h2><strong>Batch scripts to run analyses on many samples at ago</strong></h2>
+<div id="batch-scripting" class="section level2">
+<h2><strong>Batch scripting</strong></h2>
 <p>So far, we have been analyzing a single sample. However in real applications, several tens or hundreds of samples need be analyzed in one go. In this section, we look at how to perform all the above steps for a given number of samples. We use <code>for</code> loops for this training. Although out of scope for this training, there are more robust ways of automating batch analyses for example using workflow management softwares such as <a href="http://snakemake.readthedocs.io">snakemake</a> and <a href="https://www.nextflow.io">nextflow</a>.</p>
-<div id="quality-control-and-trimming-1" class="section level3">
-<h3><strong>Quality control and trimming</strong></h3>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>mkdir fastqc_results</span>
-<span id="cb12-2"><a href="#cb12-2"></a>fastqc sample1_R1.fq sample1_R2.fq <span class="op">--</span>outdir fastqc_results</span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>mkdir trimmed</span>
-<span id="cb13-2"><a href="#cb13-2"></a>trim_galore <span class="op">-</span>q <span class="dv">25</span> <span class="op">-</span>l <span class="dv">75</span> <span class="op">--</span>dont_gzip <span class="op">--</span>clip_R1 <span class="dv">16</span> <span class="op">--</span>clip_R2 <span class="dv">16</span> <span class="op">--</span>paired sample1_R1.fq sample1_R2.fq <span class="op">-</span>o trimmed</span></code></pre></div>
-</div>
-<div id="reference-based-mapping-1" class="section level3">
-<h3><strong>Reference based mapping</strong></h3>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>mkdir mapping</span>
-<span id="cb14-2"><a href="#cb14-2"></a>bowtie2 <span class="op">-</span>x refs<span class="op">/</span>adeno <span class="dv">-1</span> trimmed<span class="op">/</span>sample1_R1_val1.fq <span class="dv">-2</span> trimmed<span class="op">/</span>sample1_R2_val2.fq <span class="op">-</span>S mapping<span class="op">/</span>sample1.sam</span></code></pre></div>
-</div>
-<div id="collecting-mapping-statistics-1" class="section level3">
-<h3><strong>Collecting mapping statistics</strong></h3>
-<p>Having obtained the alignment, we need to add a process for collecting the mapping statistics. Suppose we obtain the statistics using <code>samtools flagstat</code>.</p>
-<ul>
-<li>First we, convert the alignment format from <code>sam</code> to <code>bam</code></li>
-</ul>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>samtools <span class="op">-</span>h mapping<span class="op">/</span>sample1.sam mapping<span class="op">/</span>sample1.bam</span></code></pre></div>
-<ul>
-<li>Then use <code>SAM_STATS</code> with input in <code>bam</code> to generate mapping stats</li>
-</ul>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>SAM_STATS mapping<span class="op">/</span>sample1.bam</span></code></pre></div>
-</div>
-<div id="remove-host-reads-1" class="section level3">
-<h3><strong>Remove host reads</strong></h3>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>bowtie2 <span class="op">-</span>p <span class="dv">1</span> <span class="op">-</span>x <span class="op">$</span>hostDB <span class="dv">-1</span> sample1_R1.fastq <span class="dv">-2</span> sample1_R2.fastq <span class="op">--</span>un<span class="op">-</span>conc<span class="op">-</span>gz sample1_clean <span class="op">&gt;</span><span class="st"> </span>sample1.sam</span></code></pre></div>
-</div>
-<div id="de-novo-assembly-using-spades-1" class="section level3">
-<h3><strong>De novo assembly using spades</strong></h3>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>mkdir sample1_spades_output</span>
-<span id="cb18-2"><a href="#cb18-2"></a>spades.py <span class="dv">-1</span> trimmed<span class="op">/</span>sample1_R1_val1.fq <span class="dv">-2</span> trimmed<span class="op">/</span>sample1_R2_val2.fq  <span class="op">-</span>t <span class="op">$</span>threads <span class="op">--</span>only<span class="op">-</span>assembler <span class="op">-</span>o sample1_spades_output<span class="op">/</span>contigs.fasta</span></code></pre></div>
-</div>
-<div id="align-reads-back-to-contigs-1" class="section level3">
-<h3><strong>Align reads back to contigs</strong></h3>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>bowtie2<span class="op">-</span>build sample1_spades_output<span class="op">/</span>contigs.fasta sample1</span>
-<span id="cb19-2"><a href="#cb19-2"></a>bowtie2 <span class="op">-</span>x sample1 <span class="dv">-1</span> trimmed<span class="op">/</span>sample1_R1_val1.fq <span class="dv">-2</span> trimmed<span class="op">/</span>sample1_R2_val2.fq <span class="op">-</span>S sample1.sam</span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>samtools view <span class="op">-</span>b sample1.sam <span class="op">&gt;</span><span class="st"> </span>sample1.bam</span>
-<span id="cb20-2"><a href="#cb20-2"></a>samtools sort <span class="op">-</span>o sample1_sorted.bam sample1.bam </span>
-<span id="cb20-3"><a href="#cb20-3"></a>samtools index sample1_sorted.bam</span>
-<span id="cb20-4"><a href="#cb20-4"></a>samtools idxstats sample1_sorted.bam</span></code></pre></div>
-</div>
-<div id="evaluation-of-genome-assemblies-1" class="section level3">
-<h3><strong>Evaluation of genome assemblies</strong></h3>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>quast.py <span class="op">-</span>o sample1_quast_output sample1_spades_output<span class="op">/</span>contigs.fasta </span></code></pre></div>
-</div>
-<div id="blast-de-novo-constructed-contigs-using-diamond-1" class="section level3">
-<h3><strong>Blast de-novo constructed contigs using diamond</strong></h3>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>mkdir diamond_out</span>
-<span id="cb22-2"><a href="#cb22-2"></a>mkdir diamond_out<span class="op">/</span>sample1_temp_dir</span>
-<span id="cb22-3"><a href="#cb22-3"></a>diamond blastx <span class="op">-</span>d databases<span class="op">/</span>diamond<span class="op">/</span>nr <span class="op">-</span>q sample1_spades_output<span class="op">/</span>contigs.fasta <span class="op">-</span>a diamond_out<span class="op">/</span>contigs_diamondnr.fasta diamond_out<span class="op">/</span>sample1_temp_dir <span class="op">--</span>top <span class="dv">1</span></span></code></pre></div>
-</div>
+<p>Below is a simple example of running <code>trim_galore</code> on a multiple number of samples using a <code>for</code> loop.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="cf">for</span> file_path <span class="cf">in</span> <span class="op">$</span>(ls data<span class="op">/</span><span class="er">*</span>R1<span class="op">*</span>.fq);do</span>
+<span id="cb13-2"><a href="#cb13-2"></a>  sample_name=<span class="er">$</span>(basename file_path <span class="st">&#39;.R1.fq&#39;</span>)</span>
+<span id="cb13-3"><a href="#cb13-3"></a>  trim_galore <span class="op">-</span>q <span class="dv">25</span> <span class="op">-</span>l <span class="dv">75</span> <span class="op">--</span>paired <span class="op">$</span>{sample_name}_R1.fq <span class="op">$</span>{sample_name}_R2.fq <span class="op">-</span>o trimmed;</span>
+<span id="cb13-4"><a href="#cb13-4"></a>done</span></code></pre></div>
 </div>
 <div id="contact-us" class="section level2">
 <h2><strong>Contact us</strong></h2>
-<p>For any questions/comments/inquires, kindly write to the organisers and facilitators of this training at: Dr. Sheila Balinda, <a href="sbalinda@gmail.com">sbalinda@gmail.com</a>, Dr. Segun Fatumo, <a href="Segun.Fatumo@lshtm.ac.uk">Segun.Fatumo@lshtm.ac.uk</a>, Dr. Nicholas Bbosa, <a href="nbbosa@gmail.com">nbbosa@gmail.com</a> and Mr. Alfred Ssekagiri, <a href="assekagiri@gmail.com">assekagiri@gmail.com</a>.</p>
+<p>For any questions/comments/inquires, kindly write to Dr. Nicholas Bbosa at <a href="nicholas.bbosa@mrcuganda.org">nicholas.bbosa@mrcuganda.org</a></p>
 <p>Report issues at <a href="github.com/AlfredUg/adenoMetagenTraining/issues">github.com/AlfredUg/adenoMetagenTraining/issues</a>.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
@@ -3023,11 +2975,17 @@ color:#8E44AD
 <div id="ref-bowtie2">
 <p>Langmead, Ben, and Steven L Salzberg. 2012. “Fast Gapped-Read Alignment with Bowtie 2.” <em>Nature Methods</em> 9 (4): 357.</p>
 </div>
+<div id="ref-megahit">
+<p>Li, Dinghua, Ruibang Luo, Chi-Man Liu, Chi-Ming Leung, Hing-Fung Ting, Kunihiko Sadakane, Hiroshi Yamashita, and Tak-Wah Lam. 2016. “MEGAHIT V1. 0: A Fast and Scalable Metagenome Assembler Driven by Advanced Methodologies and Community Practices.” <em>Methods</em> 102: 3–11.</p>
+</div>
 <div id="ref-samtools">
 <p>Li, Heng, Bob Handsaker, Alec Wysoker, Tim Fennell, Jue Ruan, Nils Homer, Gabor Marth, Goncalo Abecasis, and Richard Durbin. 2009. “The Sequence Alignment/Map Format and Samtools.” <em>Bioinformatics</em> 25 (16): 2078–9.</p>
 </div>
 <div id="ref-metaspades">
 <p>Nurk, Sergey, Dmitry Meleshko, Anton Korobeynikov, and Pavel A Pevzner. 2017. “MetaSPAdes: A New Versatile Metagenomic Assembler.” <em>Genome Research</em> 27 (5): 824–34.</p>
+</div>
+<div id="ref-garm">
+<p>Soto-Jimenez, L Mayela, Karel Estrada, and Alejandro Sanchez-Flores. 2014. “GARM: Genome Assembly, Reconciliation and Merging Pipeline.” <em>Current Topics in Medicinal Chemistry</em> 14 (3): 418–24.</p>
 </div>
 </div>
 </div>
