@@ -7,7 +7,7 @@
 
         <meta name="author" content="MRC/UVRI and LSHTM" />
     
-        <meta name="date" content="2021-04-05" />
+        <meta name="date" content="2021-04-11" />
     
     <title>Introduction to metagenomics data analysis</title>
 
@@ -2778,7 +2778,7 @@ color:#8E44AD
     </div>
     <div id="postamble" data-toggle="wy-nav-shift" class="status">
                   <p class="author"><span class="glyphicon glyphicon-user"></span> MRC/UVRI and LSHTM</p>
-                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-04-05</p>
+                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-04-11</p>
           </div>
    </div>
    
@@ -2883,7 +2883,7 @@ color:#8E44AD
 </div>
 <div id="reference-based-mapping" class="section level2">
 <h2><strong>Reference based mapping</strong></h2>
-<p>At this point, we have clean reads and we are ready to map the reads onto reference genomes of interest using <code>bowtie2</code>. To demonstrate this, we use reference genomes of species in the genus <em>Mastadenovirus</em> as indicated by <a href="https://talk.ictvonline.org/ictv-reports/ictv_9th_report/dsdna-viruses-2011/w/dsdna_viruses/93/adenoviridae">ICTV</a>. Full genomes were downloaded from NCBI prior to the training and are available on the virtual machine.</p>
+<p>At this point, we have clean reads and we are ready to map the reads onto reference genomes of interest using <code>bowtie2</code>. To demonstrate this, we shall use the complete genome of the Human adenovirus 26 (Accession number: EF15347). This was downloaded prior to the training and are available on the virtual machine.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>mkdir mapping</span>
 <span id="cb3-2"><a href="#cb3-2"></a>bowtie2 <span class="op">-</span>x path<span class="op">/</span>to<span class="op">/</span>refs <span class="dv">-1</span> trimmed<span class="op">/</span>sample1_R1_val1.fq <span class="dv">-2</span> trimmed<span class="op">/</span>sample1_R2_val2.fq <span class="op">-</span>S mapping<span class="op">/</span>sample1.sam</span></code></pre></div>
 <p>Having obtained the alignment, obtain the mapping statistics. In this case, we use <code>samtools idxstats</code> which requires a sorted <code>bam</code> file.</p>
@@ -2936,7 +2936,7 @@ color:#8E44AD
 </div>
 <div id="batch-scripting" class="section level2">
 <h2><strong>Batch scripting</strong></h2>
-<p>So far, we have been analyzing a single sample. However in real applications, several tens or hundreds of samples need be analyzed in one go. In this section, we look at how to perform all the above steps for a given number of samples. We use <code>for</code> loops for this training. Although out of scope for this training, there are more robust ways of automating batch analyses for example using workflow management softwares such as <a href="http://snakemake.readthedocs.io">snakemake</a> and <a href="https://www.nextflow.io">nextflow</a>.</p>
+<p>So far, we have been analyzing a single sample. However in real applications, several tens or hundreds of samples need be analyzed in one go. In this section, we look at how to perform all the above steps for a given number of samples using <code>for</code> loops. Although out of scope for this training, there are more robust ways of automating batch analyses for example using workflow management softwares such as <a href="http://snakemake.readthedocs.io">snakemake</a> and <a href="https://www.nextflow.io">nextflow</a>.</p>
 <p>Below is a simple example of running <code>trim_galore</code> on a multiple number of samples using a <code>for</code> loop.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="cf">for</span> file_path <span class="cf">in</span> <span class="op">$</span>(ls data<span class="op">/</span><span class="er">*</span>R1<span class="op">*</span>.fq);do</span>
 <span id="cb15-2"><a href="#cb15-2"></a>  sample_name=<span class="er">$</span>(basename file_path <span class="st">&#39;.R1.fq&#39;</span>)</span>
