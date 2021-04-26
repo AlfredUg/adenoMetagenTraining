@@ -11,7 +11,7 @@ Register [here](https://docs.google.com/forms/d/1x4La0OaNaTgOCK6cj2FXeNSSdEa5-HA
 
 ### **Day 1: Introduction to metagenomics**
 
-**Instructor(s):** Dr Nicholas Bbosa 
+**Instructor(s):** Dr Nicholas Bbosa and Mr Alfred Ssekagiri
 
 | Time  | Session|
 | ------------- | ------------- |
@@ -26,7 +26,7 @@ Register [here](https://docs.google.com/forms/d/1x4La0OaNaTgOCK6cj2FXeNSSdEa5-HA
 
 ### **Day 2: Introduction to linux commands**
 
-**Instructor(s):** Dr Opeyemi Soremekun and Dr Segun Fatumo
+**Instructor(s):** Dr Segun Fatumo, Dr Opeyemi Soremekun and Mr Alfred Ssekagiri
 
 | Time  | Session|
 | ------------- | ------------- |
@@ -41,7 +41,7 @@ Register [here](https://docs.google.com/forms/d/1x4La0OaNaTgOCK6cj2FXeNSSdEa5-HA
 
 ### **Day 3: Working with metagenomics data - part 1**
 
-**Instructor(s):** Dr Nicholas Bbosa and Mr Alfred Ssekagiri
+**Instructor(s):** Mr Alfred Ssekagiri and Dr Nicholas Bbosa
 
 | Time  | Session|
 | ------------- | ------------- |
@@ -56,7 +56,7 @@ Register [here](https://docs.google.com/forms/d/1x4La0OaNaTgOCK6cj2FXeNSSdEa5-HA
 
 ### **Day 4: Working with metagenomics data - part 2**
 
-**Instructor(s):** Dr Nicholas Bbosa and Mr Alfred Ssekagiri
+**Instructor(s):** Mr Alfred Ssekagiri and Dr Nicholas Bbosa
 
 | Time  | Session|
 | ------------- | ------------- |
@@ -71,7 +71,7 @@ Register [here](https://docs.google.com/forms/d/1x4La0OaNaTgOCK6cj2FXeNSSdEa5-HA
 
 ### **Day 5: Wrap up session**
 
-**Instructor(s):** Dr Nicholas Bbosa and Dr Sheila Balinda
+**Instructor(s):** Dr Nicholas Bbosa, Dr Sheila Balinda and Mr Alfred Ssekagiri
 
 | Time  | Session|
 | ------------- | ------------- |
