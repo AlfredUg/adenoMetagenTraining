@@ -21,7 +21,7 @@ To secure a place on the training, register [here](https://docs.google.com/forms
 |1130 - 1230 |    Applications of metagenomics|
 |1230 - 1300 |    NGS file formats and Quality control |
 |1300 - 1400 |    Lunch |
-|1400 - 1500 |    Reference-based mapping and DeNovo assembly |
+|1400 - 1500 |    Reference-based mapping and De Novo assembly |
 |1500 - 1600 |    Virtual machine installation and set up|
 
 ### **Day 2: Introduction to linux commands**
