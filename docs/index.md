@@ -19,21 +19,21 @@ To secure a place on the training, register [here](https://docs.google.com/forms
 |1130 - 1230 |    Applications of metagenomics|
 |1230 - 1300 |    NGS file formats and Quality control |
 |1300 - 1400 |    Lunch |
-|1400 - 1500 |    Reference-based mapping |
-|1500 - 1600 |    DeNovo assembly |
+|1400 - 1500 |    Reference-based mapping and DeNovo assembly |
+|1500 - 1600 |    Virtual machine installation and set up|
 
 ### **Day 2: Introduction to linux commands**
 
 | Time  | Session|
 | ------------- | ------------- |
-|0900 - 1000 |    Virtual machine installation and set up|
+|0900 - 1000 |    Recap|
 |1000 - 1100 |    Navigating the linux directory structure |
 |1100 - 1130 |    Coffee break|
 |1130 - 1230 |    Creating and manipulating files/directories in linux|
 |1230 - 1300 |    Inspecting file contents|
 |1300 - 1400 |    Lunch |
 |1400 - 1500 |    File permissions and ownership |
-|1500 - 1600 |    Recap of linux commands |
+|1500 - 1600 |    Summary of linux commands |
 
 ### **Day 3: Working with metagenomics data - part 1**
 
@@ -55,7 +55,7 @@ To secure a place on the training, register [here](https://docs.google.com/forms
 |0900 - 1000 |    Removing host reads from metagenomic sequence data|
 |1000 - 1100 |    De novo assembly of metagenomic reads - `metaspades`|
 |1100 - 1130 |    Coffee break|
-|1130 - 1230 |    De novo assembly of metagenomic reads - `metahit`|
+|1130 - 1230 |    De novo assembly of metagenomic reads - `megahit`|
 |1230 - 1300 |    Gap filling and merging metagenomic assemblies from different assemblers |
 |1300 - 1400 |    Lunch |
 |1400 - 1500 |    Inspecting contigs from de novo assembly of metagenomes |
