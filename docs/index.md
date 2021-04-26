@@ -11,6 +11,8 @@ To secure a place on the training, register [here](https://docs.google.com/forms
 
 ### **Day 1: Introduction to metagenomics**
 
+**Instructor(s):** Dr Nicholas Bbosa 
+
 | Time  | Session|
 | ------------- | ------------- |
 |0900 - 0915 |    Welcome and participants introduction|
@@ -23,6 +25,8 @@ To secure a place on the training, register [here](https://docs.google.com/forms
 |1500 - 1600 |    Virtual machine installation and set up|
 
 ### **Day 2: Introduction to linux commands**
+
+**Instructor(s):** Dr Opeyemi Soremekun and Dr Segun Fatumo
 
 | Time  | Session|
 | ------------- | ------------- |
@@ -37,6 +41,8 @@ To secure a place on the training, register [here](https://docs.google.com/forms
 
 ### **Day 3: Working with metagenomics data - part 1**
 
+**Instructor(s):** Dr Nicholas Bbosa and Mr Alfred Ssekagiri
+
 | Time  | Session|
 | ------------- | ------------- |
 |0900 - 1000 |    Quality control of metagenomic sequence data|
@@ -50,6 +56,8 @@ To secure a place on the training, register [here](https://docs.google.com/forms
 
 ### **Day 4: Working with metagenomics data - part 2**
 
+**Instructor(s):** Dr Nicholas Bbosa and Mr Alfred Ssekagiri
+
 | Time  | Session|
 | ------------- | ------------- |
 |0900 - 1000 |    Removing host reads from metagenomic sequence data|
@@ -62,6 +70,8 @@ To secure a place on the training, register [here](https://docs.google.com/forms
 |1500 - 1600 |    Recap of de novo metagenomic assembly |
 
 ### **Day 5: Wrap up session**
+
+**Instructor(s):** Dr Nicholas Bbosa and Dr Sheila Balinda
 
 | Time  | Session|
 | ------------- | ------------- |
