@@ -7,7 +7,7 @@
 
         <meta name="author" content="MRC/UVRI and LSHTM" />
     
-        <meta name="date" content="2021-04-11" />
+        <meta name="date" content="2021-05-03" />
     
     <title>Introduction to metagenomics data analysis</title>
 
@@ -2778,7 +2778,7 @@ color:#8E44AD
     </div>
     <div id="postamble" data-toggle="wy-nav-shift" class="status">
                   <p class="author"><span class="glyphicon glyphicon-user"></span> MRC/UVRI and LSHTM</p>
-                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-04-11</p>
+                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-05-03</p>
           </div>
    </div>
    
@@ -2812,7 +2812,7 @@ color:#8E44AD
 <li>Download the virtual machine from <a href="alfred.github.com/adenoMetagenTraining/UbuntuVM">here</a></li>
 <li>Open virtual box and click <strong>Add</strong></li>
 <li>From the virtual machine folder downloaded earlier, select the <strong>.vbox</strong> file and click open</li>
-<li>If all goes well, you will see a screen as shown below. From this point onwards, we shall be using this virtual machine the same way we would for a ubuntu machine.</li>
+<li>From this point onwards,we shall be using this virtual machine the same way we would for a ubuntu machine.</li>
 </ul>
 </div>
 <div id="introduction-to-unix" class="section level2">
@@ -2879,69 +2879,78 @@ color:#8E44AD
 <span id="cb1-2"><a href="#cb1-2"></a>fastqc data<span class="op">/</span>sample1_R1.fq data<span class="op">/</span>sample1_R2.fq <span class="op">--</span>outdir fastqc_results</span></code></pre></div>
 <p>After inspecting the quality of the reads, we use <code>trim_galore</code> to trim reads by length and quality. Note that our input is the fastq reads as specified earlier.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>mkdir trimmed</span>
-<span id="cb2-2"><a href="#cb2-2"></a>trim_galore <span class="op">-</span>q <span class="dv">30</span> <span class="op">-</span>l <span class="dv">75</span> <span class="op">--</span>dont_gzip <span class="op">--</span>clip_R1 <span class="dv">16</span> <span class="op">--</span>clip_R2 <span class="dv">16</span> <span class="op">--</span>paired data<span class="op">/</span>sample1_R1.fq data<span class="op">/</span>sample1_R2.fq <span class="op">-</span>o trimmed</span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2"></a>trim_galore <span class="op">-</span>q <span class="dv">30</span> <span class="op">--</span>paired data<span class="op">/</span>sample1_R1.fq data<span class="op">/</span>sample1_R2.fq <span class="op">-</span>o trimmed</span></code></pre></div>
 </div>
 <div id="reference-based-mapping" class="section level2">
 <h2><strong>Reference based mapping</strong></h2>
-<p>At this point, we have clean reads and we are ready to map the reads onto reference genomes of interest using <code>bowtie2</code>. To demonstrate this, we shall use the complete genome of the Human adenovirus 26 (Accession number: EF15347). This was downloaded prior to the training and are available on the virtual machine.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>mkdir mapping</span>
-<span id="cb3-2"><a href="#cb3-2"></a>bowtie2 <span class="op">-</span>x path<span class="op">/</span>to<span class="op">/</span>refs <span class="dv">-1</span> trimmed<span class="op">/</span>sample1_R1_val1.fq <span class="dv">-2</span> trimmed<span class="op">/</span>sample1_R2_val2.fq <span class="op">-</span>S mapping<span class="op">/</span>sample1.sam</span></code></pre></div>
+<p>At this point, we have clean reads and we are ready to map the reads onto reference genomes of interest using <code>bowtie2</code>. To demonstrate this, we shall use the complete genome of the Chimpanzee adenovirus (Accession number: NC_017825). This was downloaded prior to the training and is available on the virtual machine. <code>Bowtie2</code> requires that the reference genome is indexed which can be achieved by using the <code>bowtie2-build</code> command.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>bowtie2<span class="op">-</span>build adeno.fasta adeno</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>mkdir mapping</span>
+<span id="cb4-2"><a href="#cb4-2"></a>bowtie2 <span class="op">-</span>x adeno <span class="dv">-1</span> sample1_R1_val1.fq <span class="dv">-2</span> sample1_R2_val2.fq <span class="op">-</span>S sample1.sam</span></code></pre></div>
 <p>Having obtained the alignment, obtain the mapping statistics. In this case, we use <code>samtools idxstats</code> which requires a sorted <code>bam</code> file.</p>
 <ul>
-<li>First we, convert the alignment format from <code>sam</code> to <code>bam</code></li>
+<li>First, we convert the alignment format from <code>sam</code> to <code>bam</code></li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>samtools view <span class="op">-</span>b mapping<span class="op">/</span>sample1.sam <span class="op">&gt;</span><span class="st"> </span>mapping<span class="op">/</span>sample1.bam</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>samtools view <span class="op">-</span>b sample1.sam <span class="op">&gt;</span><span class="st"> </span>sample1.bam</span></code></pre></div>
 <ul>
 <li>Sort the <code>bam</code> file</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>samtools sort mapping<span class="op">/</span>sample1.bam <span class="op">&gt;</span><span class="st"> </span>mapping<span class="op">/</span>sample1_sorted.bam</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>samtools sort sample1.bam <span class="op">&gt;</span><span class="st"> </span>sample1_sorted.bam</span></code></pre></div>
 <ul>
 <li>Obtain mapping statistics using <code>samtools</code> and the sorted <code>bam</code> file</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>samtools idxstats mapping<span class="op">/</span>sample1_sorted.bam</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>samtools idxstats sample1_sorted.bam</span></code></pre></div>
+<p>Alternatively, you can use the <code>SAM_STATS</code> program to get a summary of mapping statistics as follows;</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>SAM_STATS sample1.sam</span></code></pre></div>
+<p>Use <code>tablet</code> program to visualize the alignment file. It takes as input an indexed <code>bam</code> file and the reference genome used for alignment. Simply type <code>tablet</code> to launch the program. Inspect the alignment, the mapped reads can be extracted for inspection using <code>samtools</code> and <code>awk</code> as follows.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>samtools view <span class="op">-</span>F <span class="dv">4</span> sample1.bam <span class="op">&gt;</span><span class="st"> </span>sample1_mapped.bam</span>
+<span id="cb9-2"><a href="#cb9-2"></a>awk <span class="st">&#39;{OFS=&quot;</span><span class="ch">\t</span><span class="st">&quot;;  print &quot;&gt;&quot;$1&quot;</span><span class="ch">\n</span><span class="st">&quot;$10}&#39;</span> sample1_mapped.bam <span class="op">&gt;</span><span class="st"> </span>sample1_mapped.fasta </span></code></pre></div>
+<p>Alternatively, the above can be condensed in a single line by simply piping the result of the first command to <code>awk</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>samtools view <span class="op">-</span>F <span class="dv">4</span> sample1.bam <span class="op">|</span><span class="st"> </span>awk <span class="st">&#39;{OFS=&quot;</span><span class="ch">\t</span><span class="st">&quot;;  print &quot;&gt;&quot;$1&quot;</span><span class="ch">\n</span><span class="st">&quot;$10}&#39;</span> sample1_mapped.bam <span class="op">&gt;</span><span class="st"> </span>sample1_mapped.fasta </span></code></pre></div>
+<p>Get the mapped sequences from <code>sample1_mapped.fasta</code> and manually BLAST them. Discuss the results.</p>
 </div>
 <div id="de-novo-assembly" class="section level2">
 <h2><strong>De novo assembly</strong></h2>
-<p>This section comprises of three main stages; removing host reads from the read data, assembling short reads into longer contiguous sequences using two different assemblers, merging contigs constructed by two assemblers and lastly blasting the merged contigs using <code>diamond</code>.</p>
+<p>This section comprises of four main stages; removing host reads from the read data, assembling short reads into longer contiguous sequences using two different assemblers; <code>spades</code> and <code>megahit</code>, merging contigs constructed by the two assemblers, blasting the merged contigs using <code>diamond</code> and mapping reads to detected adenovirus sequences as reference genomes.</p>
 <div id="remove-host-reads" class="section level3">
 <h3><strong>Remove host reads</strong></h3>
-<p>Prior to performing de novo assembly, we remove the host reads from the data. Here we use <code>bowtie2</code> to map reads to the human genome and retain the reads that do not map to the human genome for de novo assembly.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>mkdir clean_reads</span>
-<span id="cb7-2"><a href="#cb7-2"></a>bowtie2 <span class="op">-</span>x path<span class="op">/</span>to<span class="op">/</span>host<span class="op">/</span>db <span class="dv">-1</span> trimmed<span class="op">/</span>sample1_R1.fastq <span class="dv">-2</span> trimmed<span class="op">/</span>sample1_R2.fastq <span class="op">--</span>un<span class="op">-</span>conc<span class="op">-</span>gz clean_reads<span class="op">/</span>sample1_clean <span class="op">&gt;</span><span class="st"> </span>clean_reads<span class="op">/</span>sample1_host.sam</span></code></pre></div>
+<p>Prior to performing de novo assembly, we remove the host reads from the data. Here we use <code>bowtie2</code> to map reads to the host genome and retain the reads that do not map to the host genome for de novo assembly.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>mkdir clean_reads</span>
+<span id="cb11-2"><a href="#cb11-2"></a>bowtie2 <span class="op">-</span>x path<span class="op">/</span>to<span class="op">/</span>host<span class="op">/</span>db <span class="dv">-1</span> sample1_R1.fastq <span class="dv">-2</span> sample1_R2.fastq <span class="op">--</span>un<span class="op">-</span>conc<span class="op">-</span>gz sample1_clean <span class="op">&gt;</span><span class="st"> </span>sample1_host.sam</span></code></pre></div>
 </div>
 <div id="de-novo-assembly-using-spades" class="section level3">
 <h3><strong>De novo assembly using spades</strong></h3>
 <p>Assemble the short reads into longer contigs using <code>spades</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>mkdir spades_output</span>
-<span id="cb8-2"><a href="#cb8-2"></a>spades.py <span class="dv">-1</span> clean_reads<span class="op">/</span>sample1_R1.fq <span class="dv">-2</span> clean_reads<span class="op">/</span>sample1_R2.fq <span class="op">--</span>only<span class="op">-</span>assembler <span class="op">-</span>o spades_output<span class="op">/</span>contigs.fasta</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>mkdir spades_output</span>
+<span id="cb12-2"><a href="#cb12-2"></a>metaspades.py <span class="dv">-1</span> sample1_R1.fq <span class="dv">-2</span> sample1_R2.fq <span class="op">-</span>o spades_output<span class="op">/</span>contigs.fasta</span></code></pre></div>
 <p>Assemble the short reads into longer contigs using <code>megahit</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>mkdir megahit_output</span>
-<span id="cb9-2"><a href="#cb9-2"></a>megahit <span class="dv">-1</span> clean_reads<span class="op">/</span>sample1_R1.fq <span class="dv">-2</span> clean_reads<span class="op">/</span>sample1_R2.fq <span class="op">-</span>o megahit_output</span></code></pre></div>
-<p>Merge contigs from spades and megahit assemblers using <code>GARM</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>printf <span class="op">$</span>PWD<span class="st">&#39;/spades_output/contigs.fasta  spades</span><span class="ch">\n</span><span class="st">&#39;</span> <span class="op">$</span>PWD<span class="st">&#39;/megahit_output/final.contigs.fa  megahit</span><span class="ch">\n</span><span class="st">&#39;</span> <span class="op">&gt;</span><span class="st"> </span>garm_spades_megahit</span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>GARM.pl <span class="op">-</span>g garm_spades_megahit <span class="op">-</span>o garm_contigs</span></code></pre></div>
-<p>Blast de-novo constructed contigs using diamond</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>mkdir diamond_out</span>
-<span id="cb12-2"><a href="#cb12-2"></a>mkdir diamond_out<span class="op">/</span>sample1_temp_dir</span>
-<span id="cb12-3"><a href="#cb12-3"></a>diamond blastx <span class="op">-</span>d databases<span class="op">/</span>diamond<span class="op">/</span>nr <span class="op">-</span>q garm_contigs<span class="op">/</span>final_merged_contigs.fasta <span class="op">-</span>a diamond_out<span class="op">/</span>contigs_diamondnr.fasta diamond_out<span class="op">/</span>sample1_temp_dir <span class="op">--</span>top <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>mkdir megahit_output</span>
+<span id="cb13-2"><a href="#cb13-2"></a>megahit <span class="dv">-1</span> clean_reads<span class="op">/</span>sample1_R1.fq <span class="dv">-2</span> clean_reads<span class="op">/</span>sample1_R2.fq <span class="op">-</span>o megahit_output</span></code></pre></div>
+<p>Merge contigs from <code>spades</code> and <code>megahit</code> assemblers using <code>GARM</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>printf <span class="op">$</span>PWD<span class="st">&#39;/spades_output/contigs.fasta  spades</span><span class="ch">\n</span><span class="st">&#39;</span> <span class="op">$</span>PWD<span class="st">&#39;/megahit_output/final.contigs.fa  megahit</span><span class="ch">\n</span><span class="st">&#39;</span> <span class="op">&gt;</span><span class="st"> </span>garm_spades_megahit</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>GARM.pl <span class="op">-</span>g garm_spades_megahit <span class="op">-</span>o garm_contigs</span></code></pre></div>
+<p>Blast de-novo constructed contigs using diamond.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>mkdir diamond_out</span>
+<span id="cb16-2"><a href="#cb16-2"></a>diamond blastx <span class="op">--</span>db databases<span class="op">/</span>diamond<span class="op">/</span>adeno <span class="op">--</span>query garm_contigs<span class="op">/</span>final_merged_contigs.fasta <span class="op">--</span>out diamond_out<span class="op">/</span>dmnd.tsv <span class="op">-</span>outfmt <span class="dv">6</span> <span class="op">--</span>id <span class="dv">95</span></span></code></pre></div>
+<p>Using identified adenovirus sequences from the <code>diamond</code> blast as reference genomes, use <code>bowtie2</code> to repeat what we covered in reference based mapping above.</p>
 </div>
 </div>
 <div id="phylogenetic-analyses" class="section level2">
 <h2><strong>Phylogenetic analyses</strong></h2>
-<p>Multiple sequence alignment using <code>mafft</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>mafft all_contigs.fa <span class="op">&gt;</span><span class="st"> </span>all_contigs_aln.fa</span></code></pre></div>
+<p>Obtain reference genomes of viruses of the family Adenoviridae, combine them with the adenovirus sequences detected from the samples (in file <code>refs_and_contigs.fa</code>) and perform a multiple sequence alignment using <code>mafft</code>.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>mafft refs_and_contigs.fa <span class="op">&gt;</span><span class="st"> </span>refs_and_contigs_aln.fa</span></code></pre></div>
 <p>Phylogenetic tree construction using <code>iqtree</code></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>iqtree <span class="op">-</span>s all_contigs_aln.fa <span class="op">-</span>m MF</span></code></pre></div>
-<p>Uploaded the tree to <a href="https://itol.embl.de">iTol</a> for visualisation and further inspection.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>iqtree <span class="op">-</span>s refs_and_contigs_aln.fa <span class="op">-</span>m MF</span></code></pre></div>
+<p>Upload the tree to <a href="https://itol.embl.de">iTol</a> for visualization and further inspection.</p>
 </div>
 <div id="batch-scripting" class="section level2">
 <h2><strong>Batch scripting</strong></h2>
 <p>So far, we have been analyzing a single sample. However in real applications, several tens or hundreds of samples need be analyzed in one go. In this section, we look at how to perform all the above steps for a given number of samples using <code>for</code> loops. Although out of scope for this training, there are more robust ways of automating batch analyses for example using workflow management softwares such as <a href="http://snakemake.readthedocs.io">snakemake</a> and <a href="https://www.nextflow.io">nextflow</a>.</p>
 <p>Below is a simple example of running <code>trim_galore</code> on a multiple number of samples using a <code>for</code> loop.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="cf">for</span> file_path <span class="cf">in</span> <span class="op">$</span>(ls data<span class="op">/</span><span class="er">*</span>R1<span class="op">*</span>.fq);do</span>
-<span id="cb15-2"><a href="#cb15-2"></a>  sample_name=<span class="er">$</span>(basename file_path <span class="st">&#39;.R1.fq&#39;</span>)</span>
-<span id="cb15-3"><a href="#cb15-3"></a>  trim_galore <span class="op">-</span>q <span class="dv">25</span> <span class="op">-</span>l <span class="dv">75</span> <span class="op">--</span>paired <span class="op">$</span>{sample_name}_R1.fq <span class="op">$</span>{sample_name}_R2.fq <span class="op">-</span>o trimmed;</span>
-<span id="cb15-4"><a href="#cb15-4"></a>done</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="cf">for</span> file_path <span class="cf">in</span> <span class="op">$</span>(ls trimmed<span class="op">/</span><span class="er">*</span>R1<span class="op">*</span>.fq);do</span>
+<span id="cb19-2"><a href="#cb19-2"></a>  sample_name=<span class="er">$</span>(basename file_path <span class="st">&#39;.R1.fq&#39;</span>)</span>
+<span id="cb19-3"><a href="#cb19-3"></a>  trim_galore <span class="op">-</span>q <span class="dv">30</span> <span class="op">--</span>paired <span class="op">$</span>{sample_name}_R1.fq <span class="op">$</span>{sample_name}_R2.fq <span class="op">-</span>o trimmed;</span>
+<span id="cb19-4"><a href="#cb19-4"></a>done</span></code></pre></div>
 </div>
 <div id="contact-us" class="section level2">
 <h2><strong>Contact us</strong></h2>
