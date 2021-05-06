@@ -2929,7 +2929,7 @@ color:#8E44AD
 <h3><strong>De novo assembly using spades</strong></h3>
 <p>Assemble the short reads into longer contigs using <code>spades</code>.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>mkdir spades_output</span>
-<span id="cb14-2"><a href="#cb14-2"></a>metaspades.py <span class="dv">-1</span> sample1_R1.fq <span class="dv">-2</span> sample1_R2.fq <span class="op">-</span>o spades_output<span class="op">/</span>contigs.fasta</span></code></pre></div>
+<span id="cb14-2"><a href="#cb14-2"></a>metaspades.py <span class="dv">-1</span> sample1_R1.fq <span class="dv">-2</span> sample1_R2.fq <span class="op">-</span>o spades_output</span></code></pre></div>
 <p>Assemble the short reads into longer contigs using <code>megahit</code>.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>mkdir megahit_output</span>
 <span id="cb15-2"><a href="#cb15-2"></a>megahit <span class="dv">-1</span> clean_reads<span class="op">/</span>sample1_R1.fq <span class="dv">-2</span> clean_reads<span class="op">/</span>sample1_R2.fq <span class="op">-</span>o megahit_output</span></code></pre></div>
