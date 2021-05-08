@@ -7,7 +7,7 @@
 
         <meta name="author" content="MRC/UVRI and LSHTM" />
     
-        <meta name="date" content="2021-05-07" />
+        <meta name="date" content="2021-05-08" />
     
     <title>Introduction to metagenomics data analysis</title>
 
@@ -2778,7 +2778,7 @@ color:#8E44AD
     </div>
     <div id="postamble" data-toggle="wy-nav-shift" class="status">
                   <p class="author"><span class="glyphicon glyphicon-user"></span> MRC/UVRI and LSHTM</p>
-                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-05-07</p>
+                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-05-08</p>
           </div>
    </div>
    
@@ -2787,7 +2787,7 @@ color:#8E44AD
    
 <!-- Don't indent these lines or it will mess pre blocks indentation --> 
 <div id="main">
-<p>Welcome to this session of the introduction to metagenomics analysis. This training is aimed at introducing the basic insights into quality control, data processing, mapping short read data onto reference genomes and de novo assembly of short reads to generate longer contigs. As a use-case, we demonstrate the procedure of identifying adenoviruses from short read metagenomics data. The course outline and links to other training materials are available at <a href="https://alfredug.github.io/adenoMetagenTraining/" class="uri">https://alfredug.github.io/adenoMetagenTraining/</a>.</p>
+<p>Welcome to this session of the introduction to metagenomics analysis. This training is aimed at introducing the basic insights into quality control, data processing, mapping short read data onto reference genomes and de novo assembly of short reads to generate longer contigs. As a use-case, we demonstrate the procedure of identifying adenoviruses from short read metagenomics data.</p>
 <div id="tools" class="section level2">
 <h2><strong>Analysis tools</strong></h2>
 <p>For this training, we shall use the following tools.</p>
@@ -2917,7 +2917,7 @@ color:#8E44AD
 <p>This section comprises of four main stages; removing host reads from the read data, assembling short reads into longer contiguous sequences using two different assemblers; <code>spades</code> and <code>megahit</code>, merging contigs constructed by the two assemblers, blasting the merged contigs using <code>diamond</code> and mapping reads to detected adenovirus sequences as reference genomes.</p>
 <div id="remove-host-reads" class="section level3">
 <h3><strong>Remove host reads</strong></h3>
-<p>Prior to performing de novo assembly, we remove the host reads from the data. Here we use <code>bowtie2</code> to map reads to the host genome and retain the reads that do not map to the host genome for de novo assembly. The chimpanzee reference genome can be download from Ensembl.</p>
+<p>Prior to performing de novo assembly, we remove the host reads from the data. Here we use <code>bowtie2</code> to map reads to the host genome and retain the reads that do not map to the host genome for de novo assembly. The chimpanzee reference genome can be downloaded from Ensembl.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>mkdir clean_reads</span>
 <span id="cb12-2"><a href="#cb12-2"></a>bowtie2 <span class="op">-</span>x path<span class="op">/</span>to<span class="op">/</span>host<span class="op">/</span>db <span class="dv">-1</span> sample1_R1.fastq <span class="dv">-2</span> sample1_R2.fastq <span class="op">--</span>un<span class="op">-</span>conc<span class="op">-</span>gz sample1_clean <span class="op">&gt;</span><span class="st"> </span>sample1_host.sam</span></code></pre></div>
 <p>NOTE: De novo assembly is a time consuming process. As such, for this training, we shall have to subsample the reads using the <code>seqtk</code> program so as to have results in reasonable time. To randomly subsample 200K reads from the forward and reverse read files, do the following;</p>
@@ -2931,8 +2931,7 @@ color:#8E44AD
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>mkdir spades_output</span>
 <span id="cb14-2"><a href="#cb14-2"></a>metaspades.py <span class="dv">-1</span> sample1_R1.fq <span class="dv">-2</span> sample1_R2.fq <span class="op">-</span>o spades_output</span></code></pre></div>
 <p>Assemble the short reads into longer contigs using <code>megahit</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>mkdir megahit_output</span>
-<span id="cb15-2"><a href="#cb15-2"></a>megahit <span class="dv">-1</span> clean_reads<span class="op">/</span>sample1_R1.fq <span class="dv">-2</span> clean_reads<span class="op">/</span>sample1_R2.fq <span class="op">-</span>o megahit_output</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>megahit <span class="dv">-1</span> clean_reads<span class="op">/</span>sample1_R1.fq <span class="dv">-2</span> clean_reads<span class="op">/</span>sample1_R2.fq <span class="op">-</span>o megahit_output</span></code></pre></div>
 <p>Merge contigs from <code>spades</code> and <code>megahit</code> assemblers using <code>GARM</code>.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>printf <span class="op">$</span>PWD<span class="st">&#39;/spades_output/contigs.fasta  spades</span><span class="ch">\n</span><span class="st">&#39;</span> <span class="op">$</span>PWD<span class="st">&#39;/megahit_output/final.contigs.fa  megahit</span><span class="ch">\n</span><span class="st">&#39;</span> <span class="op">&gt;</span><span class="st"> </span>garm_spades_megahit</span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>GARM.pl <span class="op">-</span>g garm_spades_megahit <span class="op">-</span>o garm_contigs</span></code></pre></div>
@@ -2964,7 +2963,7 @@ color:#8E44AD
 <div id="contact-us" class="section level2">
 <h2><strong>Contact us</strong></h2>
 <p>For any questions/comments/inquires, kindly write to Dr. Nicholas Bbosa at <a href="nicholas.bbosa@mrcuganda.org">nicholas.bbosa@mrcuganda.org</a></p>
-<p>Report issues at <a href="github.com/AlfredUg/adenoMetagenTraining/issues">github.com/AlfredUg/adenoMetagenTraining/issues</a>.</p>
+<p>Report issues at <a href="https://github.com/AlfredUg/adenoMetagenTraining/issues">github.com/AlfredUg/adenoMetagenTraining/issues</a>.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2><strong>References</strong></h2>
