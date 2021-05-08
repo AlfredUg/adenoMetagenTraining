@@ -1,7 +1,7 @@
 
 ## **Metagenomics training @MRC/UVRI and LSHTM**
 
-This training is aimed at introducing the basic insights into quality control, metagenomic NGS data processing, mapping read metagenomics data onto reference genomes, de novo assembly of metagenomics data. As a use-case, we apply this to identifying unique adenoviruses from metagenomics data. The first sessions comprise of lecture materials which introduce metagenomics and its application in biomedical research. These are followed with a series of practical sessions a summary of which is available at [https://alfredug.github.io/adenoMetagenTraining/notes.html](https://alfredug.github.io/adenoMetagenTraining/notes.html).
+This training is aimed at introducing the basic insights into quality control, metagenomic NGS data processing, mapping read metagenomics data onto reference genomes, de novo assembly of metagenomics data. As a use-case, we apply this to identifying unique adenoviruses from metagenomics data. The first sessions comprise of lecture materials which introduce metagenomics and its application in biomedical research.
 
 Register [here](https://docs.google.com/forms/d/1x4La0OaNaTgOCK6cj2FXeNSSdEa5-HAy6LmtiWyTXAA/edit).
 
